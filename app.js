@@ -17,6 +17,7 @@ const db = require('./models')
 app.engine('hbs', handlebars({ extname: '.hbs', helpers: handlebarsHelpers }))
 // 設定使用 Handlebars 做為樣板引擎
 app.set('view engine', 'hbs')
+app.use(express.urlencoded({ extended: true }))
 
 app.use(session({ secret: SESSION_SECRET, resave: false, saveUninitialized: false }))
 app.use(passport.initialize())
@@ -29,7 +30,6 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use(express.urlencoded({ extended: true }))
 app.use(routes)
 
 app.listen(port, () => {
