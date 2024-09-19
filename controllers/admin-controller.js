@@ -1,12 +1,14 @@
 /* const db = require('../models)
 const Restaurant = db.Restaurant  等於下面這行 */
-const { Restaurant, User } = require('../models')
+const { Restaurant, User, Category } = require('../models')
 const { localFileHandler } = require('../helpers/file-helpers')
 
 const adminController = {
   getRestaurants: (req, res, next) => {
     Restaurant.findAll({
-      raw: true // 把 Sequelize 包裝過的一大包物件轉換成格式比較單純的 JS 原生物件
+      raw: true, // 把 Sequelize 包裝過的一大包物件轉換成格式比較單純的 JS 原生物件
+      nest: true,
+      include: [Category]
     })
       .then(restaurants => res.render('admin/restaurants', { restaurants }))
       .catch(err => next(err))
@@ -35,7 +37,9 @@ const adminController = {
   },
   getRestaurant: (req, res, next) => {
     Restaurant.findByPk(req.params.id, {
-      raw: true
+      raw: true,
+      nest: true,
+      include: [Category]
     })
       .then(restaurant => {
         if (!restaurant) throw new Error("Restaurant didn't exist!")
