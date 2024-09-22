@@ -1,4 +1,4 @@
-const { Restaurant, Category} = require('../models')
+const { Restaurant, Category } = require('../models')
 
 const restaurantController = {
   getRestaurants: (req, res) => {
@@ -15,6 +15,20 @@ const restaurantController = {
         restaurants: data
       })
     })
+  },
+  getRestaurant: (req, res, next) => {
+    return Restaurant.findByPk(req.params.id, {
+      include: Category,
+      raw: true,
+      nest: true
+    })
+      .then(restaurant => {
+        if (!restaurant) throw new Error("Restaurant didn't exist!")
+        res.render('restaurant', {
+          restaurant
+        })
+      })
+      .catch(err => next(err))
   }
 }
 module.exports = restaurantController
