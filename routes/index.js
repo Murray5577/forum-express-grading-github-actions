@@ -18,6 +18,7 @@ router.get('/logout', userController.logout)
 
 router.use('/admin', authenticatedAdmin, admin)
 
+router.get('/restaurants/:id/dashboard', authenticated, restController.getDashboard)
 router.get('/restaurants/:id', authenticated, restController.getRestaurant)
 router.get('/restaurants', authenticated, restController.getRestaurants)
 
