@@ -1,7 +1,7 @@
 <div class="card mb-3">
   <div class="row g-0">
     <div class="col-md-4">
-      <img src="{{user.image}}" style="width: 350px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;" alt="...">
+      <img src="{{user.image}}" style="width: 350px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
     </div>
     <div class="col-md-8">
       <div class="card-body">
@@ -16,10 +16,12 @@
 </div>
 
 <div class="card">
-  <div class="card-header">以評論餐廳</div>
+  <div class="card-header">{{commentCount}}已評論餐廳</div>
   <div class="card-body">
     <blockquote class="blockquote mb-0">
-      <p>評論...</p>
+      
+        <img src="{{user.Comments.Restaurant.image}}" style="width:100px">
+      
     </blockquote>
   </div>
 </div>
