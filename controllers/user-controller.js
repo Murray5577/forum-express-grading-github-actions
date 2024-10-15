@@ -39,24 +39,26 @@ const userController = {
     res.redirect('/signin')
   },
   getUser: (req, res, next) => {
+    const userId = req.user.id
     return Promise.all([
       Comment.findAndCountAll({
-        raw: true,
-        where: { userId: req.params.id }
+        where: { userId: req.params.id },
+        raw: true
       }),
       User.findByPk(req.params.id, {
-        raw: true,
         include: [
           { model: Comment, include: Restaurant }
-        ],
-        nest: true
+        ]
+        // raw: true 回傳的結果不是 sequelize instance (sequelize 實例)，這意味著關聯資料不會自動嵌套在一起
+        // nest: true 是用來在使用 raw: true 時，將扁平化的查詢結果重新組織成嵌套的物件結構，一層的include可以，兩層就不行
       })
     ])
       .then(([comments, user]) => {
         console.log(user)
         res.render('user/user', {
           commentCount: comments.count,
-          user
+          user: user.toJSON(),
+          userId
         })
       })
       .catch(err => next(err))

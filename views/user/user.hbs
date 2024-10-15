@@ -7,9 +7,11 @@
       <div class="card-body">
         <h5 class="card-title">{{user.name}}</h5>
         <p class="card-text">{{user.email}}</p>
-        <a href="/users/{{user.id}}/edit">
-          <button type="button" class="btn btn-primary">edit</button>
-        </a>
+        {{#ifCond user.id userId}}
+          <a href="/users/{{user.id}}/edit">
+            <button type="button" class="btn btn-primary">edit</button>
+          </a>
+        {{/ifCond}}
       </div>
     </div>
   </div>
@@ -19,9 +21,11 @@
   <div class="card-header">{{commentCount}}已評論餐廳</div>
   <div class="card-body">
     <blockquote class="blockquote mb-0">
-      
-        <img src="{{user.Comments.Restaurant.image}}" style="width:100px">
-      
+        {{#each user.Comments}}
+        <a href="/restaurants/{{this.Restaurant.id}}">
+          <img src="{{this.Restaurant.image}}" style="width:100px">
+        </a>
+        {{/each}}
     </blockquote>
   </div>
 </div>
