@@ -7,11 +7,11 @@
       <div class="card-body">
         <h5 class="card-title">{{user.name}}</h5>
         <p class="card-text">{{user.email}}</p>
-        {{#ifCond user.id userId}}
+        
           <a href="/users/{{user.id}}/edit">
             <button type="button" class="btn btn-primary">edit</button>
           </a>
-        {{/ifCond}}
+        
       </div>
     </div>
   </div>

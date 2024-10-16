@@ -39,10 +39,10 @@ const userController = {
     res.redirect('/signin')
   },
   getUser: (req, res, next) => {
-    const userId = req.user.id
+    const userId = req.params.id
     return Promise.all([
       Comment.findAndCountAll({
-        where: { userId: req.params.id },
+        where: { userId: userId },
         raw: true
       }),
       User.findByPk(req.params.id, {
@@ -54,11 +54,10 @@ const userController = {
       })
     ])
       .then(([comments, user]) => {
-        console.log(user)
-        res.render('user/user', {
-          commentCount: comments.count,
+        if (!user) throw new Error("User didn't exist!")
+        res.render('users/profile', {
           user: user.toJSON(),
-          userId
+          commentCount: comments.count
         })
       })
       .catch(err => next(err))
@@ -69,7 +68,7 @@ const userController = {
     })
       .then(user => {
         if (!user) throw new Error("User didn't exist!")
-        res.render('user/edit-user', { user })
+        res.render('users/edit', { user })
       })
       .catch(err => next(err))
   },
@@ -77,7 +76,7 @@ const userController = {
     const { name, image } = req.body
     const { file } = req
 
-    Promise.all([
+    return Promise.all([
       User.findByPk(req.params.id),
       localFileHandler(file)
     ])
@@ -89,7 +88,7 @@ const userController = {
         })
       })
       .then(() => {
-        req.flash('success_message', '使用者資料更新成功')
+        req.flash('success_messages', '使用者資料編輯成功')
         res.redirect(`/users/${req.params.id}`)
       })
       .catch(err => next(err))
