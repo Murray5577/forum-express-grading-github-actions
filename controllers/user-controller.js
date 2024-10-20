@@ -40,7 +40,7 @@ const userController = {
   },
   getUser: (req, res, next) => {
     const userId = req.params.id
-    return Promise.all([
+    return Promise.all([// 加return，上面(req)括號下會有三點，為了測試而加，不加也可以
       Comment.findAndCountAll({
         where: { userId: userId },
         raw: true
