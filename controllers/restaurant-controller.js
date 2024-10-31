@@ -107,15 +107,13 @@ const restaurantController = {
       include: [{ model: User, as: 'FavoritedUsers' }]
     })
       .then(restaurants => {
-        const favoritedRestaurantsId = req.user && req.user.FavoritedRestaurants.map(fr => fr.id)
         restaurants = restaurants.map(restaurant => ({
           ...restaurant.toJSON(),
-          followerCount: restaurant.FavoritedUsers.length,
           description: restaurant.description.substring(0, 50),
-          isFavorited: favoritedRestaurantsId.includes(restaurant.id)
+          favoritedCount: restaurant.FavoritedUsers.length,
+          isFavorited: req.user && req.user.FavoritedRestaurants.some(fr => fr.id === restaurant.id)
         }))
-        restaurants = restaurants.sort((a, b) => b.followerCount - a.followerCount).slice(0, 10)
-
+        restaurants = restaurants.sort((a, b) => b.favoritedCount - a.favoritedCount).slice(0, 10)
         res.render('top-restaurants', { restaurants })
       })
       .catch(err => next(err))

@@ -39,25 +39,23 @@ const userController = {
     res.redirect('/signin')
   },
   getUser: (req, res, next) => {
-    const userId = req.params.id
-    return Promise.all([// 加return，上面(req)括號下會有三點，為了測試而加，不加也可以
-      Comment.findAndCountAll({
-        where: { userId: userId },
-        raw: true
-      }),
-      User.findByPk(req.params.id, {
-        include: [
-          { model: Comment, include: Restaurant }
-        ]
-        // raw: true 回傳的結果不是 sequelize instance (sequelize 實例)，這意味著關聯資料不會自動嵌套在一起
-        // nest: true 是用來在使用 raw: true 時，將扁平化的查詢結果重新組織成嵌套的物件結構，一層的include可以，兩層就不行
-      })
-    ])
-      .then(([comments, user]) => {
+    const currentUser = req.user.id
+    return User.findByPk(req.params.id, {
+      include: [
+        { model: Comment, include: Restaurant },
+        { model: Restaurant, as: 'FavoritedRestaurants' },
+        { model: User, as: 'Followers' },
+        { model: User, as: 'Followings' }
+      ]
+      // raw: true 回傳的結果不是 sequelize instance (sequelize 實例)，這意味著關聯資料不會自動嵌套在一起
+      // nest: true 是用來在使用 raw: true 時，將扁平化的查詢結果重新組織成嵌套的物件結構，一層的include可以，兩層就不行
+    })
+      .then(user => {
         if (!user) throw new Error("User didn't exist!")
+        console.log(user)
         res.render('users/profile', {
           user: user.toJSON(),
-          commentCount: comments.count
+          currentUser
         })
       })
       .catch(err => next(err))

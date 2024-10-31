@@ -7,25 +7,78 @@
       <div class="card-body">
         <h5 class="card-title">{{user.name}}</h5>
         <p class="card-text">{{user.email}}</p>
-        
+        <ul class="list-unstyled list-inline">
+          <li><strong>{{user.Comments.length}}</strong> 已評論餐廳</li>
+          <li><strong>{{user.FavoritedRestaurants.length}}</strong> 收藏的餐廳</li>
+          <li><strong>{{user.Followings.length}}</strong> followings (追蹤者)</li>
+          <li><strong>{{user.Followers.length}}</strong> followers (追隨者)</li>
+        </ul>
+        {{#ifCond user.id currentUser}}
           <a href="/users/{{user.id}}/edit">
             <button type="button" class="btn btn-primary">edit</button>
           </a>
-        
+        {{/ifCond}}  
       </div>
     </div>
   </div>
 </div>
 
-<div class="card">
-  <div class="card-header">{{commentCount}}已評論餐廳</div>
-  <div class="card-body">
-    <blockquote class="blockquote mb-0">
+<div class="row mt-5">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">{{user.Followings.length}}followings ( 追蹤者 )</div>
+      <div class="card-body">
+        <blockquote class="blockquote mb-0">
+          {{#each user.Followings}}
+            {{#if this.image}}
+            <img src="{{this.image}}" width="60" height="60" class="avatar" style="transition: opacity 0.5s; opacity:0;"
+              onload="this.style.opacity=1;" />
+            {{else}}
+            <img src="https://via.placeholder.com/60" width="60" height="60" class="avatar"
+              style="transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;" />
+            {{/if}}
+          {{/each}}
+        </blockquote>
+      </div>
+    </div>
+    <div class="card mt-3">
+      <div class="card-header">{{user.Followers.length}}followers ( 追隨者 )</div>
+      <div class="card-body">
+        <blockquote class="blockquote mb-0">
+          {{#each user.Followers}}
+            {{#if this.image}}
+            <img src="{{this.image}}" width="60" height="60" class="avatar" style="transition: opacity 0.5s; opacity:0;"
+              onload="this.style.opacity=1;" />
+            {{else}}
+            <img src="https://via.placeholder.com/60" width="60" height="60" class="avatar"
+              style="transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;" />
+            {{/if}}
+          {{/each}}
+        </blockquote>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">{{user.Comments.length}}已評論餐廳</div>
+      <div class="card-body">
         {{#each user.Comments}}
-        <a href="/restaurants/{{this.Restaurant.id}}">
+        <a href="/restaurants/{{this.Restaurant.id}}" class="text-decoration-none">
           <img src="{{this.Restaurant.image}}" style="width:100px">
         </a>
         {{/each}}
-    </blockquote>
+      </div>
+    </div>
+    <br />
+    <div class="card">
+      <div class="card-header">{{user.FavoritedRestaurants.length}}收藏的餐廳</div>
+      <div class="card-body">
+        {{#each user.FavoritedRestaurants}}
+        <a href="/restaurants/{{this.id}}" class="text-decoration-none">
+          <img src="{{this.image}}" style="width:100px">
+        </a>
+        {{/each}}
+      </div>
+    </div>
   </div>
 </div>
